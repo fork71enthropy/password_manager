@@ -45,3 +45,42 @@ class VaultManager:
 """
 six functionnalities in total, updating entries, delete, save,load,set the key 
 """
+
+def list_entries(vault):
+    """
+    Affiche les entrées actuelles du coffre.
+    """
+    if not vault.entries:
+        print("Le coffre est vide.")
+    else:
+        for i, entry in enumerate(vault.entries):
+            print(f"{i}: {entry}")
+
+def search_entries(vault, keyword):
+    """
+    Recherche et affiche les entrées contenant un mot-clé.
+    """
+    results = [entry for entry in vault.entries if keyword.lower() in str(entry).lower()]
+    if results:
+        print("Résultats de recherche :")
+        for i, entry in enumerate(results):
+            print(f"{i}: {entry}")
+    else:
+        print("Aucun résultat trouvé.")
+
+def export_entries(vault, export_file='exported_vault.json'):
+    """
+    Exporte les entrées en clair dans un fichier JSON.
+    """
+    with open(export_file, 'w', encoding='utf-8') as f:
+        json.dump(vault.entries, f, ensure_ascii=False, indent=4)
+    print(f"Entrées exportées dans {export_file}")
+
+def import_entries(vault, import_file='exported_vault.json'):
+    """
+    Importe des entrées depuis un fichier JSON externe.
+    """
+    if not os.path.exists(import_file):
+        print(f"Fichier {import_file} introuvable.")
+        return
+    with open(import_file, 'r', encoding='utf-8') as f_
