@@ -40,3 +40,8 @@ class VaultManager:
     def update_entry(self, idx, entry):
         self.entries[idx] = entry
         self.save() 
+
+#the user can update the entries
+"""
+six functionnalities in total, updating entries, delete, save,load,set the key 
+"""
