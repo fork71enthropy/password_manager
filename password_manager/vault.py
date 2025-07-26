@@ -48,39 +48,65 @@ six functionnalities in total, updating entries, delete, save,load,set the key
 
 def list_entries(vault):
     """
-    Affiche les entrées actuelles du coffre.
+    Display all entries stored in the vault.
     """
     if not vault.entries:
-        print("Le coffre est vide.")
+        print("The vault is empty.")
     else:
         for i, entry in enumerate(vault.entries):
             print(f"{i}: {entry}")
 
 def search_entries(vault, keyword):
     """
-    Recherche et affiche les entrées contenant un mot-clé.
+    Search for entries containing a keyword.
     """
     results = [entry for entry in vault.entries if keyword.lower() in str(entry).lower()]
     if results:
-        print("Résultats de recherche :")
+        print("Search results:")
         for i, entry in enumerate(results):
             print(f"{i}: {entry}")
     else:
-        print("Aucun résultat trouvé.")
+        print("No results found.")
 
 def export_entries(vault, export_file='exported_vault.json'):
     """
-    Exporte les entrées en clair dans un fichier JSON.
+    Export vault entries to a plaintext JSON file.
     """
     with open(export_file, 'w', encoding='utf-8') as f:
         json.dump(vault.entries, f, ensure_ascii=False, indent=4)
-    print(f"Entrées exportées dans {export_file}")
+    print(f"Entries exported to '{export_file}'.")
 
 def import_entries(vault, import_file='exported_vault.json'):
     """
-    Importe des entrées depuis un fichier JSON externe.
+    Import entries from an external JSON file.
     """
     if not os.path.exists(import_file):
-        print(f"Fichier {import_file} introuvable.")
+        print(f"File '{import_file}' not found.")
         return
-    with open(import_file, 'r', encoding='utf-8') as f_
+    with open(import_file, 'r', encoding='utf-8') as f:
+        imported = json.load(f)
+    if isinstance(imported, list):
+        vault.entries.extend(imported)
+        vault.save()
+        print(f"{len(imported)} entries successfully imported.")
+    else:
+        print("Invalid format: the file must contain a list of entries.")
+
+def clear_vault(vault):
+    """
+    Delete all entries from the vault.
+    """
+    vault.entries.clear()
+    vault.save()
+    print("All entries have been deleted.")
+
+def backup_vault(filename='vault_backup.dat'):
+    """
+    Create a backup of the encrypted data file.
+    """
+    if os.path.exists(DATA_FILE):
+        import shutil
+        shutil.copy(DATA_FILE, filename)
+        print(f"Backup created at '{filename}'.")
+    else:
+        print("No data file found to back up.")
